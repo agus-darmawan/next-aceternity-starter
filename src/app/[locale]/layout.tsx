@@ -1,63 +1,58 @@
-import { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { ThemeProvider } from 'next-themes';
+import {
+  getMessages,
+  getTranslations,
+  unstable_setRequestLocale,
+} from 'next-intl/server';
 import { ReactNode } from 'react';
 
 import '@/styles/globals.css';
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | Starter',
-    default: 'Homepage | Starter',
-  },
-  description: 'Agus Darmawan starter website.',
-  applicationName: 'Agus Darmawan next js starter template',
-  authors: [{ name: 'Agus Darmawan' }],
-  generator: 'Next.js',
-  keywords: [
-    'Agus Darmawan',
-    'code',
-    'web development',
-    'javascript',
-    'react',
-    'node.js',
-    'portfolio',
-    'web dev',
-    'html',
-    'css',
-    'python',
-    'robotics',
-    'ros',
-    'barunastra',
-  ],
-  referrer: 'origin-when-cross-origin',
-  creator: 'Agus Darmawan',
-  publisher: 'Agus Darmawan',
-};
+import { ThemeProvider } from '@/components/ThemeProvider';
+
+import { locales } from '@/config';
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-interface IRootLayoutProps {
+type RootLayoutProps = {
   children: ReactNode;
   params: {
     locale: string;
+  };
+};
+
+export function generateStaticParam() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params: { locale },
+}: Omit<RootLayoutProps, 'children'>) {
+  const t = await getTranslations({ locale, namespace: 'RootLayout' });
+  return {
+    title: t('title'),
   };
 }
 
 export default async function RootLayout({
   children,
   params: { locale },
-}: IRootLayoutProps) {
+}: RootLayoutProps) {
+  unstable_setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
     <html lang={locale}>
-      <ThemeProvider attribute='class'>
+      <ThemeProvider
+        attribute='class'
+        defaultTheme='system'
+        enableSystem
+        disableTransitionOnChange
+      >
         <body className={poppins.className}>
           <NextIntlClientProvider messages={messages}>
             {children}
