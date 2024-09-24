@@ -13,6 +13,17 @@
     "prettier"
   ],
   "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "next/link",
+            "message": "Please import from '@/navigation' instead."
+          }
+        ]
+      }
+    ],
     "no-unused-vars": "off",
     "no-console": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "off",

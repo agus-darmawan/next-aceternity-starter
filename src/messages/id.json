@@ -1,0 +1,9 @@
+{
+  "HomePage": {
+    "title": "Home Indo"
+  },
+  "LocaleSwitcer": {
+    "label": "Ganti Bahasa",
+    "locale": "{locale, select, en {en} id {id} other {Unknown}}"
+  }
+}
